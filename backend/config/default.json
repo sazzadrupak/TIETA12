@@ -1,0 +1,4 @@
+{
+  "jwtPrivateKey": "webstore:98f00c08-f829-45cf-8e4e-255b5ab786bf",
+  "db": "mongodb://localhost/webstore"
+}

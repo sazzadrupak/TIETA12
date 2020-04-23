@@ -1,0 +1,47 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "create a webstore that buy and sell used items",
+  "main": "index.js",
+  "engines": {
+    "node": "13.3.0",
+    "npm": "6.13.1"
+  },
+  "scripts": {
+    "lint": "eslint 'modules/**/*.js' 'config/**/*.js' 'startapp/**/*.js' 'utils/**/*.js' 'test/**/*.js'",
+    "preinstall": "npm install --save-dev nodemon",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sazzadrupak/TIETA12.git"
+  },
+  "keywords": [
+    "webstore",
+    "backend",
+    "mongoose",
+    "express"
+  ],
+  "author": "bd-people",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "config": "^3.3.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.9.2",
+    "node-pre-gyp": "^0.14.0",
+    "uuid": "^7.0.1",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "nodemon": "^2.0.2"
+  }
+}
