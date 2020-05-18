@@ -7,10 +7,17 @@ const validator = require("../middleware/validate");
 const validateObjectId = require("../middleware/validateObjectId");
 const asyncMiddleware = require("../middleware/async");
 const mongooseError = require("../utils/mongooseError");
+const { v4: uuidv4 } = require("uuid");
 
 const router = express.Router();
 
 router.post("/signup", [validator(validate)], async (req, res) => {
+  const userType = req.body.userType;
+  if (userType === "admin") {
+    let user = await User.findOne({ userType });
+    if (user) return res.status(400).send("User can not be admin");
+  }
+
   let user = await User.findOne({ email: req.body.email });
   if (user) return res.status(400).send("User already registered.");
 
@@ -27,6 +34,8 @@ router.post("/signup", [validator(validate)], async (req, res) => {
   );
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
+  user.tokenId = uuidv4();
+
   try {
     await user.save();
   } catch (ex) {
@@ -34,7 +43,9 @@ router.post("/signup", [validator(validate)], async (req, res) => {
     return res.status(code).send(message);
   }
 
-  return res.send("Your account has been created successfully.");
+  return res
+    .status(200)
+    .send({ message: "Your account has been created successfully." });
 });
 
 router.post("/login", async (req, res) => {
@@ -54,8 +65,9 @@ router.get("/:id", [auth, validateObjectId], async (req, res) => {
   const { _id, userType } = req.user;
   if (userType === "admin" || _id === req.params.id) {
     const user = await User.findById(req.params.id);
-    if (!user)
+    if (!user) {
       return res.status(404).send("The user with the given ID was not found.");
+    }
     return res.send(
       _.pick(user, [
         "firstName",
@@ -78,10 +90,11 @@ router.put(
     const { _id, userType } = req.user;
     if (userType === "admin" || _id === req.params.id) {
       const user = await User.findById(req.params.id);
-      if (!user)
+      if (!user) {
         return res
           .status(404)
           .send("The user with the given ID was not found.");
+      }
 
       const updateBody = {
         firstName: req.body.firstName || user.firstName,
@@ -127,10 +140,11 @@ router.put(
     const { userType } = req.user;
     if (userType === "admin") {
       const user = await User.findById(req.params.id);
-      if (!user)
+      if (!user) {
         return res
           .status(404)
           .send("The user with the given ID was not found.");
+      }
 
       const updateBody = {
         firstName: user.firstName,

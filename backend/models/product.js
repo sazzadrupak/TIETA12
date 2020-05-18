@@ -1,48 +1,54 @@
-const Joi = require('joi');
-const mongoose = require('mongoose');
+const Joi = require("joi");
+const mongoose = require("mongoose");
+
 const opts = { toJSON: { virtuals: true } };
 
-const productSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  productName: {
-    type: String,
-    required: true,
-    minLength: 2,
-    maxlength: 255,
+const productSchema = new mongoose.Schema(
+  {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    productName: {
+      type: String,
+      required: true,
+      minLength: 2,
+      maxlength: 255,
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+    accepted: {
+      type: Boolean,
+      default: false,
+    },
+    acceptedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    shopkeeperPrice: {
+      type: Number,
+      min: 1,
+    },
+    onSale: {
+      type: Boolean,
+      default: false,
+    },
+    sold: {
+      type: Boolean,
+      default: false,
+    },
+    soldTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
-  price: {
-    type: Number,
-    required: true,
-    min: 1,
-  },
-  accepted: {
-    type: Boolean,
-    default: false
-  },
-  acceptedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  shopkeeperPrice: {
-    type: Number,
-    min: 1,
-  },
-  onSale: {
-    type: Boolean,
-    default: false
-  },
-  sold: {
-    type: Boolean,
-    default: false
-  },
-  soldTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-}, { timestamps: true }, opts);
+  { timestamps: true },
+  opts
+);
 
-productSchema.virtual('_links').get(function () {
+/* eslint-disable */
+productSchema.virtual("_links").get(function () {
   const links = [
-    { rel: "self", href: `http://localhost:3000/product/`+this._id },
-  ]
+    { rel: "self", href: `http://localhost:3000/product/` + this._id },
+  ];
   return links;
 });
-
-const Product = mongoose.model('Product', productSchema);
+/* eslint-enable */
+const Product = mongoose.model("Product", productSchema);
 
 function validateProduct(product) {
   const schema = {

@@ -1,8 +1,9 @@
-const mongoose = require('mongoose');
-
-module.exports = function (req, res, next) {
-  if( !mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return res.status(404).send('Invalid ID.');
+const mongoose = require("mongoose");
+/* eslint-disable */
+module.exports = (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).send("Invalid ID.");
   }
   next();
-}
+};
+/* eslint-enable */

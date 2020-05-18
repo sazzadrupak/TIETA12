@@ -6,18 +6,19 @@ const {
   MONGO_PASSWORD,
   MONGO_HOSTNAME,
   MONGO_PORT,
-  MONGO_DB,
+  MONGO_DB_TEST,
 } = process.env;
 
 const options = {
   useNewUrlParser: true,
-  reconnectTries: Number.MAX_VALUE,
-  reconnectInterval: 500,
-  connectTimeoutMS: 10000,
   useUnifiedTopology: true,
+  autoIndex: false, // Don't build indexes
+  poolSize: 10, // Maintain up to 10 socket connections
+  serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+  socketTimeoutMS: 20000, // Close sockets after 45 seconds of inactivity
 };
 
-let url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
+let url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB_TEST}`;
 
 module.exports = () => {
   mongoose
