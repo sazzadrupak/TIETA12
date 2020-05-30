@@ -3,12 +3,33 @@
 const chai = require("chai");
 const supertest = require("supertest");
 const Promise = require("bluebird");
+const winston = require("winston");
+const mongoose = require("mongoose");
 
 const { expect } = chai;
 const server = supertest.agent(`http://backend:8080/user`);
 
 const { User } = require("../../models/user");
 const { validUsers } = require("../testData");
+// const { connect, disconnect } = require("./db");
+
+const {
+  MONGO_USERNAME,
+  MONGO_PASSWORD,
+  MONGO_HOSTNAME,
+  MONGO_PORT,
+  MONGO_DB,
+} = process.env;
+
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  autoIndex: false, // Don't build indexes
+  reconnectInterval: 5000,
+  connectTimeoutMS: 30000,
+  keepAlive: 1,
+};
+let url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
 
 /*
 = create an registered user
@@ -36,18 +57,21 @@ const { validUsers } = require("../testData");
 = create user without account no
 */
 describe("Check /signup POST register api", () => {
-  after("DELETE all users except admin", async () => {
-    const db = require("../../startapp/db");
-    console.log("After");
-    let Info = await db.User();
-    console.log({ User: Info });
-    db.disconnect();
-    //validUsers.map(async (user) => {
-
-    //});
+  after("clean users test data", () => {
+    mongoose.connect(url, options, async (err) => {
+      if (err) {
+        winston.error("DB connection error", err);
+      }
+      await Promise.all(
+        validUsers.map(async (user) => {
+          await User.deleteOne({ email: user.userData.email });
+        })
+      );
+      mongoose.connection.close();
+    });
   });
 
-  const exec = (data) => {
+  const exec = async (data) => {
     return server
       .post("/signup")
       .set("Content-Type", "application/json")

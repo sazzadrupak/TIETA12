@@ -15,9 +15,10 @@ const options = {
   reconnectInterval: 500,
   connectTimeoutMS: 10000,
   useUnifiedTopology: true,
+  poolSize: 10,
 };
 
-let url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
+const url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
 
 module.exports = () => {
   mongoose

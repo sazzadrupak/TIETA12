@@ -27,7 +27,7 @@ services:
     image: backend
     container_name: backend
     restart: unless-stopped
-    command: ["./wait-for.sh", "db:27017", "--", "npm", "run", "dev"]
+    # command: ["./wait-for.sh", "db:27017", "--", "npm", "run", "dev"]
     ports:
       - target: 8080
         published: 8080
@@ -44,6 +44,8 @@ services:
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - db
     networks:
       - app-network
 
