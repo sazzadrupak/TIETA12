@@ -18,13 +18,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minLength: 2,
-      maxlength: 100,
+      maxlength: 50,
     },
     lastName: {
       type: String,
       required: true,
       minLength: 2,
-      maxlength: 100,
+      maxlength: 50,
     },
     email: {
       type: String,
@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["admin", "shopkeeper", "registered"],
       default: "registered",
+      required: true,
     },
     bankName: {
       type: String,
@@ -86,11 +87,12 @@ function validateUser(user) {
     firstName: Joi.string().min(2).max(50).required(),
     lastName: Joi.string().min(2).max(50).required(),
     email: Joi.string().required().email(),
-    password: Joi.string().min(5).max(255).required(),
+    password: Joi.string().min(5).max(50).required(),
     bankName: Joi.string().min(2).max(50).required(),
     userType: Joi.string()
       .valid("admin", "shopkeeper", "registered")
-      .uppercase(),
+      .uppercase()
+      .required(),
     accountNo: Joi.string()
       .regex(/^[A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4} [0-9]{2}$/)
       .required()

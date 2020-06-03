@@ -8,18 +8,20 @@ const validateObjectId = require("../middleware/validateObjectId");
 const asyncMiddleware = require("../middleware/async");
 const mongooseError = require("../utils/mongooseError");
 const { v4: uuidv4 } = require("uuid");
+const winston = require("winston");
 
 const router = express.Router();
 
 router.post("/signup", [validator(validate)], async (req, res) => {
   const userType = req.body.userType;
+
   if (userType === "admin") {
-    let user = await User.findOne({ userType });
-    if (user) return res.status(400).send("User can not be admin");
+    let user = await User.findOne({ userType: "admin" });
+    if (user) return res.status(400).send({ message: "User can not be admin" });
   }
 
   let user = await User.findOne({ email: req.body.email });
-  if (user) return res.status(400).send("User already registered.");
+  if (user) return res.status(400).send({ message: "User already registered" });
 
   user = new User(
     _.pick(req.body, [
@@ -40,7 +42,7 @@ router.post("/signup", [validator(validate)], async (req, res) => {
     await user.save();
   } catch (ex) {
     const { code, message } = mongooseError(ex);
-    return res.status(code).send(message);
+    return res.status(code).send({ message });
   }
 
   return res
