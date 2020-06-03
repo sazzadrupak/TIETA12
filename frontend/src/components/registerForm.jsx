@@ -78,7 +78,7 @@ class RegisterForm extends Form {
               )}
             </div>
           </div>
-          {this.renderButton("Login")}
+          {this.renderButton("Signup")}
         </form>
       </div>
     );

@@ -17,8 +17,8 @@ class LoginForm extends Form {
   doSubmit = async () => {
     try {
       const { data } = this.state;
-      const { data: jwt } = await authService.login(data);
-      console.log(jwt);
+      const responseBody = await authService.login(data);
+      console.log({ headers: responseBody.headers });
     } catch (ex) {
       if (
         ex.response &&
